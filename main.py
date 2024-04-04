@@ -2,17 +2,20 @@ from fastapi import FastAPI, status, HTTPException, Depends
 from fastapi.responses import FileResponse, RedirectResponse
 from models.GodSlave import RabOfGod
 from models.Troyka import Troyka
+from models.Login_Data import Login_Data
 from models.Sentence import Sentence
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from DataBase.DBDeclaration import GodSlaveModel, TroykaModel, SentenceModel
+from fastapi.security import OAuth2PasswordRequestForm
 from auth.utils import (
     get_hashed_password,
     create_access_token,
     create_refresh_token,
     verify_password
 )
+from deps import get_current_user
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./DataBase/sql_troyki.db"
 
@@ -24,31 +27,32 @@ db = SessionLocal()
 
 app = FastAPI()
 @app.post("/signup")
-async def signup_user(user: RabOfGod):
-    user_in_db = db.query(GodSlaveModel).filter(GodSlaveModel.login == user.email).first()
+def signup_user(user: RabOfGod):
+    user_in_db = db.query(GodSlaveModel).filter(GodSlaveModel.login == user.login).first()
     if user_in_db is not None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="User with this login already exist"
         )
+    user.password = get_hashed_password(user.password)
     slaveModel = GodSlaveModel(login=user.login, password=user.password,
                                position = user.position, fullname = user.fullname,
                                photo_URL = user.photo_URL, ifTrockist = user.ifTrockist)
 
     db.add(slaveModel)
     db.commit()
-    return {"message": slaveModel}
+    return {"message": user}
 
 @app.post("/login")
-async def login_user(login : str, password: str):
-    user = db.query(GodSlaveModel).filter(GodSlaveModel.login == login).first()
+async def login_user(form_data: Login_Data):
+    user = db.query(GodSlaveModel).filter(GodSlaveModel.login == form_data.login).first()
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Incorrect email or password"
         )
     hashed_passwd = user.password
-    if not verify_password(password, hashed_passwd):
+    if not verify_password(form_data.password, hashed_passwd):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Incorrect email or password"
@@ -71,10 +75,10 @@ async def login_user(login : str, password: str):
 # def getSlaveByID(id: int):
 #     slaveModel = db.get(GodSlaveModel, id)
 #     return {"RabOfGod": slaveModel}
-# @app.get("/slave")
-# def getSlaves():
-#     slaves = db.query(GodSlaveModel).all()
-#     return {"RabOfGod[]": slaves}
+@app.get("/slave")
+def getSlaves():
+    slaves = db.query(GodSlaveModel).all()
+    return {"RabOfGod[]": slaves}
 @app.patch("/slave/{id}")
 def patchSlaveByID(id: int, slave: RabOfGod):
     slaveModel = db.get(GodSlaveModel, id)
@@ -130,5 +134,8 @@ def deleteSentenceByID(id: int):
 def root_html():
     return "Files/Stalin.jpg"
 
+@app.get('/me')
+async def get_me(user: RabOfGod = Depends(get_current_user)):
+    return user
 
 
