@@ -5,11 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d67b655e-fb15-43e7-b661-216311c25071" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/deps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/Login_Data.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/TokenPayload.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataBase/sql_troyki.db" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase/sql_troyki.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -110,7 +106,7 @@
       <workItem from="1711532586297" duration="7324000" />
       <workItem from="1711545178614" duration="1464000" />
       <workItem from="1712135546607" duration="731000" />
-      <workItem from="1712211707670" duration="3988000" />
+      <workItem from="1712211707670" duration="4718000" />
     </task>
     <servers />
   </component>
@@ -122,7 +118,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/main.py</url>
-          <line>118</line>
+          <line>119</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">

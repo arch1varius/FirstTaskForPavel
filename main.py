@@ -17,6 +17,7 @@ from auth.utils import (
 )
 from deps import get_current_user
 
+politburo = []
 SQLALCHEMY_DATABASE_URL = "sqlite:///./DataBase/sql_troyki.db"
 
 engine = create_engine(
@@ -135,7 +136,21 @@ def root_html():
     return "Files/Stalin.jpg"
 
 @app.get('/me')
-async def get_me(user: RabOfGod = Depends(get_current_user)):
+def get_me(user: RabOfGod = Depends(get_current_user)):
     return user
+
+@app.post('/politburo')
+def politburo(text: str, user: RabOfGod = Depends(get_current_user)):
+    if not user.ifTrockist:
+        politburo.append(text + " " + user.login)
+        return {"message": "sucessful done smth with politburo"}
+    else:
+        return {"message": "ААААААА ТРОЦКИСТЫЫЫЫ!!!!!"}
+@app.get('/politburo')
+def politburo(user: RabOfGod = Depends(get_current_user)):
+    if not user.ifTrockist:
+        return politburo
+    else:
+        return {"message": "ААААААА ТРОЦКИСТЫЫЫЫ!!!!!"}
 
 
