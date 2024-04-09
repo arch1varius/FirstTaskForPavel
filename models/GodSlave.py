@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Literal
+from typing import Literal, Optional
 
 
 class RabOfGod(BaseModel):
@@ -7,5 +7,5 @@ class RabOfGod(BaseModel):
     password: str
     position: Literal['Чекист', 'Член ВКП(б)', 'Прокурор', 'Простой смертный']
     fullname: str
-    photo_URL: str | None = None
+    photo_URL: Optional[str] = None
     ifTrockist: bool
