@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+from sqlalchemy.orm import sessionmaker
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_troykidb"
 
@@ -21,6 +22,7 @@ class GodSlaveModel(Base):
     photo_URL = Column(String)
     ifTrockist = Column(Boolean)
 
+
 class TroykaModel(Base):
     __tablename__ = "troyka"
     id = Column(Integer, primary_key=True, index=True)
@@ -29,6 +31,7 @@ class TroykaModel(Base):
     commy_id = Column(Integer, ForeignKey("godSlave.id"))
     prokuror_id = Column(Integer, ForeignKey("godSlave.id"))
 
+
 class SentenceModel(Base):
     __tablename__ = "sentence"
     id = Column(Integer, primary_key=True, index=True)
@@ -36,6 +39,11 @@ class SentenceModel(Base):
     description = Column(String)
     ifExecution = Column(Boolean)
 
+
+class PolitburoModel(Base):
+    __tablename__ = "politburo"
+    id = Column(Integer, primary_key=True, index=True)
+    description = Column(String)
+
+
 Base.metadata.create_all(bind=engine)
-
-
