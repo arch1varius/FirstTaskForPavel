@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from fastapi import FastAPI, status, HTTPException, Depends
+from fastapi import FastAPI, status, HTTPException, Depends, Response
 from models.GodSlave import RabOfGod
 from models.Login_Data import Login_Data
 from DataBase.DBDeclaration import GodSlaveModel
@@ -36,7 +36,7 @@ def signup_user(user: RabOfGod):
 
 
 @router.post("/login")
-async def login_user(form_data: Login_Data):
+async def login_user(form_data: Login_Data, response: Response):
     form_data.login = form_data.login.lower()
     user = db.query(GodSlaveModel).filter(GodSlaveModel.login == form_data.login).first()
     if user is None:
@@ -50,10 +50,9 @@ async def login_user(form_data: Login_Data):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Incorrect email or password"
         )
-    return {
-        "access_token": create_access_token(user.login),
-        "refresh_token": create_refresh_token(user.login),
-    }
+    access_token = create_access_token(user.login)
+    response.set_cookie(key="auth_token", value=access_token, secure=True, httponly=True)
+    return {"message": "куки установлены"}
 
 
 @router.get('/me')

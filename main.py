@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from routes.auth_routes import router as auth_router
 from routes.file_routes import router as file_router
 from routes.god_slave_routes import router as god_slave_router
@@ -14,3 +14,9 @@ app.include_router(god_slave_router)
 app.include_router(politburo_router)
 app.include_router(sentence_router)
 app.include_router(troyka_router)
+
+@app.get("/cookie/{txt}")
+def root(txt: str, response: Response):
+    now = "123" + txt   # получаем текущую дату и время
+    response.set_cookie(key="last_visit", value=now)
+    return  {"message": "куки установлены"}
